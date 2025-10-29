@@ -12,8 +12,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            CompteSeeder::class
-        ]);
+        $this->command->info('Création des utilisateurs...');
+        $this->call(UserSeeder::class);
+
+        // Les autres seeders seront ajoutés ici plus tard
+        // $this->call(CompteSeeder::class);
+        // $this->call(TransactionSeeder::class);
     }
 }

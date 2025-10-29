@@ -29,6 +29,8 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    // En développement nous autorisons l'envoi de credentials (cookies / auth)
+    // En production, mettez cette valeur à false si vous n'utilisez pas de cookies
+    'supports_credentials' => true,
 
 ];

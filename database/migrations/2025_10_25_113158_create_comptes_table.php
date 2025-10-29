@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('comptes', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('numero')->unique();
             $table->decimal('solde', 15, 2)->default(0);
             $table->string('type');

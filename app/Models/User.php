@@ -16,19 +16,54 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
+    // Types d'utilisateurs
+    public const TYPE_CLIENT = 'client';
+    public const TYPE_ADMIN = 'admin';
+
+    // Statuts possibles
+    public const STATUT_ACTIF = 'actif';
+    public const STATUT_INACTIF = 'inactif';
+
+    /**
+     * Champs de base requis pour tous les utilisateurs
+     */
+    protected static $baseFields = [
+        'name',
+        'email',
+        'password',
+        'type'
+    ];
+
+    /**
+     * Champs supplémentaires requis selon le type d'utilisateur
+     */
+    protected static $requiredFieldsByType = [
+        self::TYPE_CLIENT => [
+            'prenom',
+            'telephone',
+            'adresse',
+            'statut'
+        ],
+        self::TYPE_ADMIN => [] // Utilise uniquement les champs de base
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    public const TYPE_CLIENT = 'client';
-    public const TYPE_ADMIN = 'admin';
-
     protected $fillable = [
+        // Champs de base
         'name',
         'email',
         'password',
-        'type'
+        'type',
+        
+        // Champs spécifiques client
+        'prenom',
+        'telephone',
+        'adresse',
+        'statut'
     ];
 
     /**
