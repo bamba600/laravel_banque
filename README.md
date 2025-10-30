@@ -1,66 +1,170 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 API Bancaire Laravel - Déploiement sur Render
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📋 Vue d'ensemble
 
-## About Laravel
+Cette API Laravel fournit une gestion complète des comptes bancaires avec authentification, transactions et blocages automatiques. Déployée sur Render avec Docker et PostgreSQL.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌐 URLs de production
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **API Base**: `https://proget-laravel-api.onrender.com`
+- **Documentation Swagger**: `https://proget-laravel-api.onrender.com/api/documentation`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Technologies utilisées
 
-## Learning Laravel
+- **Laravel 10** - Framework PHP
+- **PostgreSQL** - Base de données
+- **Docker** - Containerisation
+- **Render** - Plateforme de déploiement
+- **L5-Swagger** - Documentation API
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📚 Endpoints API
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Comptes bancaires
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/v1/comptes` | Lister tous les comptes (avec pagination et filtres) |
+| GET | `/api/v1/comptes/{numero}` | Détails d'un compte par numéro |
+| GET | `/api/v1/comptes/client/{telephone}` | Comptes d'un client par téléphone |
+| POST | `/api/v1/comptes/{id}/bloquer` | Bloquer un compte épargne |
 
-## Laravel Sponsors
+### Paramètres de requête (GET /api/v1/comptes)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- `page`: numéro de page (défaut: 1)
+- `limit`: éléments par page (défaut: 10, max: 100)
+- `type`: filtre par type (`epargne`, `courant`)
+- `statut`: filtre par statut (`actif`, `bloque`)
+- `sort`: champ de tri (`dateCreation`, `numero`, `solde`)
+- `order`: ordre (`asc`, `desc`)
 
-### Premium Partners
+## 🚀 Déploiement
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Prérequis
 
-## Contributing
+1. **Repository GitHub** avec le code source
+2. **Compte Render** (gratuit disponible)
+3. **Base de données PostgreSQL** sur Render
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Étapes de déploiement
 
-## Code of Conduct
+#### 1. Créer la base de données PostgreSQL sur Render
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Aller sur [dashboard.render.com](https://dashboard.render.com)
+2. Cliquer "New" → "PostgreSQL"
+3. Configurer :
+   - **Name**: `proget-laravel-db`
+   - **Plan**: Free
+4. Noter les informations de connexion
 
-## Security Vulnerabilities
+#### 2. Déployer l'application
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Dans Render, cliquer "New" → "Web Service"
+2. Connecter votre repository GitHub
+3. Configurer :
+   - **Name**: `proget-laravel-api`
+   - **Runtime**: Docker
+   - **Dockerfile Path**: `./Dockerfile`
+4. Ajouter les variables d'environnement (voir section suivante)
 
-## License
+#### 3. Variables d'environnement
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```yaml
+# Application
+APP_NAME: "Proget Laravel 2"
+APP_ENV: production
+APP_DEBUG: false
+APP_KEY: # Généré automatiquement
+
+# Base de données
+DB_CONNECTION: pgsql
+DB_HOST: dpg-xxxxxxxxxxxxxxxxxx.oregon-postgres.render.com
+DB_PORT: 5432
+DB_DATABASE: progetlaravel
+DB_USERNAME: progetlaravel_user
+DB_PASSWORD: votre_mot_de_passe_db
+
+# CORS
+CORS_ALLOWED_ORIGINS: "https://votre-frontend.onrender.com"
+CORS_SUPPORTS_CREDENTIALS: true
+```
+
+## 🔧 Configuration
+
+### Base de données
+
+L'application utilise PostgreSQL avec les tables suivantes :
+- `users` - Utilisateurs/clients
+- `comptes` - Comptes bancaires
+- `transactions` - Transactions
+- `oauth_access_tokens` - Tokens d'authentification
+
+### Migrations et seeders
+
+Les migrations sont exécutées automatiquement au démarrage. Les seeders créent :
+- 4 administrateurs
+- 27 clients (22 actifs, 3 inactifs, 2 non vérifiés)
+
+## 📖 Utilisation de l'API
+
+### Exemples de requêtes
+
+#### Lister les comptes
+```bash
+curl "https://proget-laravel-api.onrender.com/api/v1/comptes?page=1&limit=5&type=epargne"
+```
+
+#### Détails d'un compte
+```bash
+curl "https://proget-laravel-api.onrender.com/api/v1/comptes/CPT0000000000001"
+```
+
+#### Comptes d'un client
+```bash
+curl "https://proget-laravel-api.onrender.com/api/v1/comptes/client/+221771234567"
+```
+
+## 🔍 Monitoring et débogage
+
+### Logs Render
+- Aller dans votre service → onglet "Logs"
+- Voir les logs en temps réel
+
+### Tests locaux
+```bash
+# Avec Docker Compose
+docker-compose up --build
+
+# Tests unitaires
+php artisan test
+```
+
+## 🐛 Résolution des problèmes
+
+### Erreur 500
+- Vérifier les logs Render
+- Contrôler la connexion DB
+- Vérifier les variables d'environnement
+
+### Problème de CORS
+- Ajouter votre domaine frontend dans `CORS_ALLOWED_ORIGINS`
+- Redéployer l'application
+
+### Base de données inaccessible
+- Vérifier les credentials PostgreSQL
+- S'assurer que la DB est active
+- Contrôler les règles de firewall
+
+## 📞 Support
+
+Pour toute question ou problème :
+1. Vérifier les logs Render
+2. Tester localement avec Docker
+3. Consulter la documentation Swagger
+
+## 🔄 Mises à jour
+
+Le déploiement est automatique via GitHub. Chaque push sur la branche `main` déclenche un redéploiement.
+
+---
+
+**🎉 Déploiement réussi ! Votre API bancaire est maintenant opérationnelle sur Render.**
