@@ -3,8 +3,7 @@ services:
     name: proget-laravel-api
     runtime: docker
     plan: free
-    buildCommand: "docker build -t proget-laravel ."
-    startCommand: "docker run -p $PORT:80 proget-laravel"
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_NAME
         value: "Proget Laravel 2"
