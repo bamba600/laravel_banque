@@ -60,14 +60,27 @@ if [ -z "$APP_KEY" ]; then\n\
     php artisan key:generate\n\
 fi\n\
 \n\
-# Attendre que la base de données soit prête\n\
+# Attendre que la base de données soit prête (avec timeout)\n\
 echo "Waiting for database..."\n\
+timeout=30\n\
+counter=0\n\
 while ! php artisan migrate:status > /dev/null 2>&1; do\n\
-    sleep 1\n\
+    if [ $counter -ge $timeout ]; then\n\
+        echo "Database connection timeout, starting Apache anyway..."\n\
+        break\n\
+    fi\n\
+    echo "Database not ready, waiting..."\n\
+    sleep 2\n\
+    counter=$((counter + 2))\n\
 done\n\
 \n\
-# Exécuter les migrations\n\
-php artisan migrate --force\n\
+# Exécuter les migrations si la DB est accessible\n\
+if php artisan migrate:status > /dev/null 2>&1; then\n\
+    echo "Running migrations..."\n\
+    php artisan migrate --force\n\
+else\n\
+    echo "Skipping migrations due to database issues"\n\
+fi\n\
 \n\
 # Générer la documentation Swagger\n\
 php artisan l5-swagger:generate\n\
