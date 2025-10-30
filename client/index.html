@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Comptes - CORS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .error {
+            border-color: #f44336;
+            background-color: #ffebee;
+        }
+        .success {
+            border-color: #4caf50;
+            background-color: #e8f5e8;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test API Comptes - Problème CORS</h1>
+
+    <p>Cette page teste l'API des comptes pour reproduire le problème CORS.</p>
+
+    <button onclick="testAPI()">Tester l'API</button>
+
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = 'Chargement...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/comptes?page=1&limit=10&type=epargne&statut=actif&sort=dateCreation&order=desc', {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                        'X-CSRF-TOKEN': ''
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>Succès !</h3>
+                        <p>Status: ${response.status}</p>
+                        <p>Headers CORS:</p>
+                        <ul>
+                            <li>Access-Control-Allow-Origin: ${response.headers.get('Access-Control-Allow-Origin')}</li>
+                            <li>Access-Control-Allow-Credentials: ${response.headers.get('Access-Control-Allow-Credentials')}</li>
+                            <li>Access-Control-Expose-Headers: ${response.headers.get('Access-Control-Expose-Headers')}</li>
+                        </ul>
+                        <p>Nombre de comptes: ${data.data ? data.data.length : 'N/A'}</p>
+                        <details>
+                            <summary>Voir les données complètes</summary>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </details>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>Erreur !</h3>
+                    <p>${error.message}</p>
+                    <p>Type d'erreur: ${error.name}</p>
+                    <p>Vérifiez la console du navigateur pour plus de détails.</p>
+                `;
+                console.error('Erreur détaillée:', error);
+            }
+        }
+
+        // Test automatique au chargement de la page
+        window.addEventListener('load', function() {
+            console.log('Page chargée depuis:', window.location.origin);
+            console.log('Test de l\'API...');
+        });
+    </script>
+</body>
+</html>

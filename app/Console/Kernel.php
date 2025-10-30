@@ -12,7 +12,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Archiver les comptes dont la date de début est arrivée, toutes les heures
+        $schedule->command('comptes:archive-expired')
+                 ->hourly()
+                 ->withoutOverlapping()
+                 ->runInBackground();
+
+        // Débloquer les comptes dont la date de fin est arrivée, toutes les heures
+        $schedule->command('comptes:unlock-expired')
+                 ->hourly()
+                 ->withoutOverlapping()
+                 ->runInBackground();
     }
 
     /**

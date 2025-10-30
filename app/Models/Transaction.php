@@ -64,7 +64,8 @@ class Transaction extends Model
         'statut',
         'compte_source_id',
         'compte_destination_id',
-        'description'
+        'description',
+        'archived_at'
     ];
 
     /**
@@ -73,7 +74,8 @@ class Transaction extends Model
     protected $casts = [
         'montant' => 'decimal:2',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
+        'archived_at' => 'datetime'
     ];
 
     /**

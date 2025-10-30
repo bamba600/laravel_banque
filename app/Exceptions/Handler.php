@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +28,41 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Convertit les exceptions en réponses JSON pour l'API
+     */
+    public function render($request, Throwable $exception): JsonResponse
+    {
+        // Pour les requêtes API, retourner JSON
+        if ($request->is('api/*')) {
+            // Nos exceptions personnalisées
+            if ($exception instanceof ApiException) {
+                return $exception->render();
+            }
+
+            // Validation Laravel
+            if ($exception instanceof LaravelValidationException) {
+                return app(ValidationException::class, [
+                    'errors' => $exception->errors()
+                ])->render();
+            }
+
+            // Erreurs 404
+            if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+                return app(ResourceNotFoundException::class)->render();
+            }
+
+            // Autres erreurs
+            return app(ApiException::class, [
+                'message' => 'Erreur interne du serveur',
+                'statusCode' => 500,
+                'errorCode' => 'INTERNAL_ERROR'
+            ])->render();
+        }
+
+        // Pour les autres requêtes, comportement normal
+        return parent::render($request, $exception);
     }
 }

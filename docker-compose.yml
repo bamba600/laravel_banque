@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      - APP_NAME="Proget Laravel 2"
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=https://your-render-app.onrender.com
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=dpg-d41p11hr0fns739dc03g-a.oregon-postgres.render.com
+      - DB_PORT=5432
+      - DB_DATABASE=progetlaravel
+      - DB_USERNAME=progetlaravel_user
+      - DB_PASSWORD=NY9eVwhCaB836tTyBvCPoWZsj1EDyLxW
+      - CORS_ALLOWED_ORIGINS="https://your-frontend-domain.com"
+      - CORS_SUPPORTS_CREDENTIALS=true
+    volumes:
+      - ./storage:/var/www/html/storage
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
