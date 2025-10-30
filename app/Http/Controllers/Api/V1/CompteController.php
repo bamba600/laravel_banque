@@ -8,6 +8,10 @@
  * )
  *
  * @OA\Server(
+ *     url="https://proget-laravel-api.onrender.com/api/v1",
+ *     description="Serveur de production"
+ * ),
+ * @OA\Server(
  *     url="http://localhost:8000/api/v1",
  *     description="Serveur de développement"
  * )
