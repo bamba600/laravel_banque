@@ -35,6 +35,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        // Exclure la route Swagger UI qui doit retourner une vue HTML
+        if ($request->is('api/documentation')) {
+            return parent::render($request, $exception);
+        }
+
         // Pour les requêtes API et Swagger, retourner JSON
         if ($request->is('api/*') || $request->is('docs/*')) {
             // Nos exceptions personnalisées

@@ -32,7 +32,7 @@ Route::get('/api/documentation', function () {
         'operationsSorter' => null,
         'configUrl' => null,
         'validatorUrl' => null,
-        'useAbsolutePath' => false
+        'useAbsolutePath' => true
     ]);
 })->name('l5-swagger.default.api');
 
