@@ -34,7 +34,8 @@ COPY . /var/www/html
 RUN composer install --optimize-autoloader --no-dev
 
 # Publier les vues et assets Swagger
-RUN php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider" --force
+RUN php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider" --force && \
+    php artisan l5-swagger:publish-assets
 
 # Définir les permissions
 RUN chown -R www-data:www-data /var/www/html \
