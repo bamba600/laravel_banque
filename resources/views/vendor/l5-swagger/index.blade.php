@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>{{config('l5-swagger.documentations.'.$documentation.'.api.title')}}</title>
-    <link rel="stylesheet" type="text/css" href="{{ custom_swagger_asset('swagger-ui.css') }}">
-    <link rel="icon" type="image/png" href="{{ custom_swagger_asset('favicon-32x32.png') }}" sizes="32x32"/>
-    <link rel="icon" type="image/png" href="{{ custom_swagger_asset('favicon-16x16.png') }}" sizes="16x16"/>
+    @php
+        $isProduction = app()->environment('production');
+        $cdnBase = 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.3/';
+    @endphp
+    <link rel="stylesheet" type="text/css" href="{{ $isProduction ? $cdnBase . 'swagger-ui.css' : asset('vendor/l5-swagger/swagger-ui.css') }}">
+    <link rel="icon" type="image/png" href="{{ $isProduction ? $cdnBase . 'favicon-32x32.png' : asset('vendor/l5-swagger/favicon-32x32.png') }}" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="{{ $isProduction ? $cdnBase . 'favicon-16x16.png' : asset('vendor/l5-swagger/favicon-16x16.png') }}" sizes="16x16"/>
     <style>
     html
     {
@@ -119,8 +123,8 @@
 <body @if(config('l5-swagger.defaults.ui.display.dark_mode')) id="dark-mode" @endif>
 <div id="swagger-ui"></div>
 
-<script src="{{ custom_swagger_asset('swagger-ui-bundle.js') }}"></script>
-<script src="{{ custom_swagger_asset('swagger-ui-standalone-preset.js') }}"></script>
+<script src="{{ $isProduction ? $cdnBase . 'swagger-ui-bundle.js' : asset('vendor/l5-swagger/swagger-ui-bundle.js') }}"></script>
+<script src="{{ $isProduction ? $cdnBase . 'swagger-ui-standalone-preset.js' : asset('vendor/l5-swagger/swagger-ui-standalone-preset.js') }}"></script>
 <script>
     window.onload = function() {
         // Build a system
