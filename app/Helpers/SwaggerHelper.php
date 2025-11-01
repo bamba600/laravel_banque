@@ -2,7 +2,7 @@
 
 if (!function_exists('custom_swagger_asset')) {
     function custom_swagger_asset($asset) {
-        if (config('app.env') === 'production') {
+        if (app()->environment('production')) {
             return "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.3/{$asset}";
         }
 
