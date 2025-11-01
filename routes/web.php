@@ -37,7 +37,7 @@ Route::get('/api/documentation', function () {
 })->name('l5-swagger.default.api');
 
 Route::get('/docs/asset/{asset}', function ($asset) {
-    $path = base_path('vendor/swagger-api/swagger-ui/dist/' . $asset);
+    $path = public_path('vendor/l5-swagger/' . $asset);
 
     if (!file_exists($path)) {
         abort(404);
