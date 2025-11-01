@@ -7,6 +7,10 @@
     },
     "servers": [
         {
+            "url": "{L5_SWAGGER_CONST_HOST}",
+            "description": "Serveur de production"
+        },
+        {
             "url": "http://localhost:8000",
             "description": "Serveur de développement"
         }
@@ -459,6 +463,12 @@
                     },
                     "date_debut_blockage": {
                         "description": "Date de début du blocage",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "date_fin_blockage": {
+                        "description": "Date de fin du blocage",
                         "type": "string",
                         "format": "date-time",
                         "nullable": true

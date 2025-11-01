@@ -12,6 +12,10 @@ use Illuminate\Http\Request;
  * )
  *
  * @OA\Server(
+ *     url="{L5_SWAGGER_CONST_HOST}",
+ *     description="Serveur de production"
+ * ),
+ * @OA\Server(
  *     url="http://localhost:8000",
  *     description="Serveur de développement"
  * )
@@ -33,6 +37,7 @@ use Illuminate\Http\Request;
  *     @OA\Property(property="statut", type="string", enum={"actif", "bloque", "archive"}, description="Statut du compte"),
  *     @OA\Property(property="motifBlocage", type="string", nullable=true, description="Motif du blocage si applicable"),
  *     @OA\Property(property="date_debut_blockage", type="string", format="date-time", nullable=true, description="Date de début du blocage"),
+ *     @OA\Property(property="date_fin_blockage", type="string", format="date-time", nullable=true, description="Date de fin du blocage"),
  *     @OA\Property(property="client_id", type="string", format="uuid", description="ID du client propriétaire"),
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Date de création"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Date de dernière modification")
