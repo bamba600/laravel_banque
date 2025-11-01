@@ -14,6 +14,7 @@ return [
                  */
                 'api' => 'api/documentation',
                 'docs' => 'api/docs',
+                'json' => 'api/docs',
             ],
             'paths' => [
                 /*
