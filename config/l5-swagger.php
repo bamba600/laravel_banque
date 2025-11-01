@@ -317,5 +317,14 @@ return [
         'constants' => [
             'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'https://proget-laravel-api.onrender.com'),
         ],
+        /*
+         * Servers configuration for different environments
+         */
+        'servers' => [
+            [
+                'url' => env('APP_URL', 'http://localhost:8000') . '/api/v1',
+                'description' => 'API Server',
+            ],
+        ],
     ],
 ];
