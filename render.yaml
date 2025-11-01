@@ -29,3 +29,5 @@ services:
         value: "https://your-frontend-domain.com"
       - key: CORS_SUPPORTS_CREDENTIALS
         value: true
+      - key: L5_SWAGGER_CONST_HOST
+        value: "https://proget-laravel-api.onrender.com"
