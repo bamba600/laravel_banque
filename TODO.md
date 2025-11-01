@@ -1,0 +1,11 @@
+- [x] Fix JavaScript initialization in index.blade.php to use json_encode for proper value encoding
+  - [x] Update url parameter
+  - [x] Update operationsSorter parameter
+  - [x] Update configUrl parameter
+  - [x] Update validatorUrl parameter
+  - [x] Update docExpansion parameter
+  - [x] Update filter parameter
+  - [x] Update persistAuthorization parameter
+  - [x] Update oauth2RedirectUrl parameter
+  - [x] Update usePkceWithAuthorizationCodeGrant parameter
+- [x] Regenerate Swagger documentation to apply changes

@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>{{config('l5-swagger.documentations.'.$documentation.'.api.title')}}</title>
-    @php
-        $isProduction = app()->environment('production');
-        $cdnBase = 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.3/';
-    @endphp
-    <link rel="stylesheet" type="text/css" href="{{ $isProduction ? $cdnBase . 'swagger-ui.css' : asset('vendor/l5-swagger/swagger-ui.css') }}">
-    <link rel="icon" type="image/png" href="{{ $isProduction ? $cdnBase . 'favicon-32x32.png' : asset('vendor/l5-swagger/favicon-32x32.png') }}" sizes="32x32"/>
-    <link rel="icon" type="image/png" href="{{ $isProduction ? $cdnBase . 'favicon-16x16.png' : asset('vendor/l5-swagger/favicon-16x16.png') }}" sizes="16x16"/>
+    <link rel="stylesheet" type="text/css" href="{{ l5_swagger_asset($documentation, 'swagger-ui.css') }}">
+    <link rel="icon" type="image/png" href="{{ l5_swagger_asset($documentation, 'favicon-32x32.png') }}" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="{{ l5_swagger_asset($documentation, 'favicon-16x16.png') }}" sizes="16x16"/>
     <style>
     html
     {
@@ -107,7 +103,7 @@
                 background: rgba(249,62,62,.25);
             }
             #dark-mode .loading-container .loading:before{
-                border-color: rgba(255,255,255,10%);
+                border-color: rgba(255,255,255,0.1);
                 border-top-color: rgba(255,255,255,.6);
             }
             #dark-mode svg:not(:root){
@@ -123,17 +119,17 @@
 <body @if(config('l5-swagger.defaults.ui.display.dark_mode')) id="dark-mode" @endif>
 <div id="swagger-ui"></div>
 
-<script src="{{ $isProduction ? $cdnBase . 'swagger-ui-bundle.js' : asset('vendor/l5-swagger/swagger-ui-bundle.js') }}"></script>
-<script src="{{ $isProduction ? $cdnBase . 'swagger-ui-standalone-preset.js' : asset('vendor/l5-swagger/swagger-ui-standalone-preset.js') }}"></script>
+<script src="{{ l5_swagger_asset($documentation, 'swagger-ui-bundle.js') }}"></script>
+<script src="{{ l5_swagger_asset($documentation, 'swagger-ui-standalone-preset.js') }}"></script>
 <script>
     window.onload = function() {
         // Build a system
         const ui = SwaggerUIBundle({
             dom_id: '#swagger-ui',
             url: "{!! $urlToDocs !!}",
-            operationsSorter: {!! isset($operationsSorter) ? '"' . $operationsSorter . '"' : 'null' !!},
-            configUrl: {!! isset($configUrl) ? '"' . $configUrl . '"' : 'null' !!},
-            validatorUrl: {!! isset($validatorUrl) ? '"' . $validatorUrl . '"' : 'null' !!},
+            operationsSorter: {!! isset($operationsSorter) ? json_encode($operationsSorter) : 'null' !!},
+            configUrl: {!! isset($configUrl) ? json_encode($configUrl) : 'null' !!},
+            validatorUrl: {!! isset($validatorUrl) ? json_encode($validatorUrl) : 'null' !!},
             oauth2RedirectUrl: "{{ route('l5-swagger.'.$documentation.'.oauth2_callback', [], $useAbsolutePath) }}",
 
             requestInterceptor: function(request) {
@@ -151,10 +147,10 @@
             ],
 
             layout: "StandaloneLayout",
-            docExpansion : "{!! config('l5-swagger.defaults.ui.display.doc_expansion', 'none') !!}",
+            docExpansion : {!! json_encode(config('l5-swagger.defaults.ui.display.doc_expansion', 'none')) !!},
             deepLinking: true,
-            filter: {!! config('l5-swagger.defaults.ui.display.filter') ? 'true' : 'false' !!},
-            persistAuthorization: "{!! config('l5-swagger.defaults.ui.authorization.persist_authorization') ? 'true' : 'false' !!}",
+            filter: {!! config('l5-swagger.defaults.ui.display.filter') !!},
+            persistAuthorization: {!! config('l5-swagger.defaults.ui.authorization.persist_authorization') !!},
 
         })
 
@@ -162,7 +158,7 @@
 
         @if(in_array('oauth2', array_column(config('l5-swagger.defaults.securityDefinitions.securitySchemes'), 'type')))
         ui.initOAuth({
-            usePkceWithAuthorizationCodeGrant: "{!! (bool)config('l5-swagger.defaults.ui.authorization.oauth2.use_pkce_with_authorization_code_grant') !!}"
+            usePkceWithAuthorizationCodeGrant: {!! (bool)config('l5-swagger.defaults.ui.authorization.oauth2.use_pkce_with_authorization_code_grant') !!}
         })
         @endif
     }

@@ -5,9 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'API Bancaire Laravel',
-                'description' => 'Documentation complète de l\'API bancaire avec gestion des comptes, transactions et blocages automatiques',
-                'version' => '1.0.0',
+                'title' => 'L5 Swagger UI',
             ],
 
             'routes' => [
@@ -25,7 +23,7 @@ return [
                 /*
                 * Edit to set path where swagger ui assets should be stored
                 */
-                'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.3'),
+                'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'vendor/swagger-api/swagger-ui/dist/'),
 
                 /*
                  * File name of the generated json documentation file
@@ -47,7 +45,6 @@ return [
                  */
                 'annotations' => [
                     base_path('app'),
-                    base_path('app/Swagger'),
                 ],
             ],
         ],
@@ -94,7 +91,7 @@ return [
             /*
              * Edit to set the api's base path
              */
-            'base' => env('L5_SWAGGER_BASE_PATH', '/api/v1'),
+            'base' => env('L5_SWAGGER_BASE_PATH', null),
 
             /*
              * Absolute path to directories that should be excluded from scanning
@@ -315,16 +312,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'https://proget-laravel-api.onrender.com'),
-        ],
-        /*
-         * Servers configuration for different environments
-         */
-        'servers' => [
-            [
-                'url' => env('APP_URL', 'https://proget-laravel-api.onrender.com') . '/api/v1',
-                'description' => 'API Server',
-            ],
+            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
         ],
     ],
 ];

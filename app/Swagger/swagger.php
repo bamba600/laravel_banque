@@ -14,7 +14,15 @@
  *
  * @OA\Server(
  *     url="https://proget-laravel-api.onrender.com/api/v1",
- *     description="Serveur de production"
+ *     description="Serveur de production Render"
+ * ),
+ * @OA\Server(
+ *     url="http://localhost:8000/api/v1",
+ *     description="Serveur de développement"
+ * ),
+ * @OA\Server(
+ *     url="/api/v1",
+ *     description="Serveur relatif"
  * )
  *
  * @OA\Tag(
