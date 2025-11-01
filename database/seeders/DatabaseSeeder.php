@@ -15,8 +15,10 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Création des utilisateurs...');
         $this->call(UserSeeder::class);
 
-        // Les autres seeders seront ajoutés ici plus tard
-        // $this->call(CompteSeeder::class);
-        // $this->call(TransactionSeeder::class);
+        $this->command->info('Création des comptes...');
+        $this->call(CompteSeeder::class);
+
+        $this->command->info('Création des transactions...');
+        $this->call(TransactionSeeder::class);
     }
 }
