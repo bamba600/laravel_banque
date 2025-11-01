@@ -29,7 +29,7 @@ Route::get('/', function () {
 Route::get('/api/documentation', function () {
     return view('vendor.l5-swagger.index', [
         'documentation' => 'default',
-        'urlToDocs' => url('/docs'),
+        'urlToDocs' => url('/api/docs'),
         'operationsSorter' => null,
         'configUrl' => null,
         'validatorUrl' => null,
