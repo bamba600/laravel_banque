@@ -40,8 +40,8 @@ class Handler extends ExceptionHandler
             return parent::render($request, $exception);
         }
 
-        // Pour les requêtes API et Swagger, retourner JSON
-        if ($request->is('api/*') || $request->is('docs/*')) {
+        // Pour les requêtes API et Swagger (sauf assets), retourner JSON
+        if (($request->is('api/*') || $request->is('docs')) && !$request->is('docs/asset/*')) {
             // Nos exceptions personnalisées
             if ($exception instanceof ApiException) {
                 return $exception->render();
