@@ -61,10 +61,21 @@ EOF
 
 # Créer le script de démarrage
 RUN echo '#!/bin/bash\n\
-# Générer la clé d application si elle n existe pas\n\
+set -e\n\
+\n\
+# Vérifier que APP_KEY est défini\n\
 if [ -z "$APP_KEY" ]; then\n\
-    php artisan key:generate\n\
+    echo "ERROR: APP_KEY is not set!"\n\
+    echo "Please set APP_KEY environment variable in Render dashboard"\n\
+    echo "Generate one with: php artisan key:generate --show"\n\
+    exit 1\n\
 fi\n\
+\n\
+# Optimiser Laravel\n\
+echo "Optimizing Laravel..."\n\
+php artisan config:cache 2>&1 || echo "Config cache failed, continuing..."\n\
+php artisan route:cache 2>&1 || echo "Route cache failed, continuing..."\n\
+php artisan view:cache 2>&1 || echo "View cache failed, continuing..."\n\
 \n\
 # Attendre que la base de données soit prête (avec timeout)\n\
 echo "Waiting for database..."\n\
@@ -90,8 +101,15 @@ else\n\
 fi\n\
 \n\
 # Générer la documentation Swagger\n\
-php artisan l5-swagger:generate\n\
+echo "Regenerating Swagger documentation..."\n\
+php artisan l5-swagger:generate default 2>&1 || echo "Swagger generation failed, continuing..."\n\
 \n\
+# Vérifier que les fichiers critiques existent\n\
+if [ ! -f "storage/api-docs/api-docs.json" ]; then\n\
+    echo "WARNING: Swagger documentation not generated!"\n\
+fi\n\
+\n\
+echo "Starting Apache..."\n\
 # Démarrer Apache\n\
 apache2-foreground' > /usr/local/bin/start.sh
 

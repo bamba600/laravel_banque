@@ -66,26 +66,46 @@ Cette API Laravel fournit une gestion complète des comptes bancaires avec authe
    - **Dockerfile Path**: `./Dockerfile`
 4. Ajouter les variables d'environnement (voir section suivante)
 
-#### 3. Variables d'environnement
+#### 3. Variables d'environnement ⚠️ IMPORTANT
+
+**VOUS DEVEZ** configurer ces variables dans Render pour que l'application fonctionne :
 
 ```yaml
-# Application
+# Application (OBLIGATOIRE)
 APP_NAME: "Proget Laravel 2"
 APP_ENV: production
 APP_DEBUG: false
-APP_KEY: # Généré automatiquement
+APP_KEY: base64:8KzP3vJ9mN2qR5tY7wX0zA1bC4dE6fG8hI9jK0lM1nO=  # ⚠️ À CHANGER !
+APP_URL: https://proget-laravel-api.onrender.com
 
-# Base de données
+# Logs
+LOG_CHANNEL: stderr
+LOG_LEVEL: error
+
+# Base de données (déjà configurées)
 DB_CONNECTION: pgsql
-DB_HOST: dpg-xxxxxxxxxxxxxxxxxx.oregon-postgres.render.com
+DB_HOST: dpg-d41p11hr0fns739dc03g-a.oregon-postgres.render.com
 DB_PORT: 5432
 DB_DATABASE: progetlaravel
 DB_USERNAME: progetlaravel_user
-DB_PASSWORD: votre_mot_de_passe_db
+DB_PASSWORD: NY9eVwhCaB836tTyBvCPoWZsj1EDyLxW
 
-# CORS
-CORS_ALLOWED_ORIGINS: "https://votre-frontend.onrender.com"
+# Swagger Documentation
+L5_SWAGGER_CONST_HOST: https://proget-laravel-api.onrender.com
+L5_SWAGGER_GENERATE_ALWAYS: false
+L5_SWAGGER_USE_ABSOLUTE_PATH: true
+
+# CORS (optionnel)
+CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
 CORS_SUPPORTS_CREDENTIALS: true
+```
+
+**🔑 Pour générer une vraie APP_KEY :**
+```bash
+# Localement
+php artisan key:generate --show
+
+# Ou utilisez temporairement celle ci-dessus et changez-la après le premier déploiement
 ```
 
 ## 🔧 Configuration
@@ -140,26 +160,69 @@ php artisan test
 
 ## 🐛 Résolution des problèmes
 
-### Erreur 500
-- Vérifier les logs Render
-- Contrôler la connexion DB
-- Vérifier les variables d'environnement
+### ❌ Erreur 500 - "ERROR: APP_KEY is not set!"
+**Cause** : La variable `APP_KEY` n'est pas configurée dans Render
 
-### Problème de CORS
-- Ajouter votre domaine frontend dans `CORS_ALLOWED_ORIGINS`
-- Redéployer l'application
+**Solution** :
+1. Allez dans Render Dashboard → Votre service → Environment
+2. Ajoutez `APP_KEY` avec une valeur générée (voir section Variables d'environnement)
+3. Sauvegardez et redéployez
 
-### Base de données inaccessible
-- Vérifier les credentials PostgreSQL
-- S'assurer que la DB est active
-- Contrôler les règles de firewall
+### ❌ Erreur 500 - Page blanche
+**Causes possibles** :
+- Fichier `welcome.blade.php` manquant (✅ maintenant créé)
+- Problème de permissions sur `storage/`
+- Erreur de configuration
 
-## 📞 Support
+**Solution** :
+1. Vérifiez les logs Render (onglet Logs)
+2. Activez temporairement `APP_DEBUG=true` pour voir les erreurs détaillées
+3. Vérifiez que toutes les variables d'environnement sont définies
 
-Pour toute question ou problème :
-1. Vérifier les logs Render
-2. Tester localement avec Docker
-3. Consulter la documentation Swagger
+### ❌ Documentation Swagger ne s'affiche pas
+**Solution** :
+1. Vérifiez que `L5_SWAGGER_CONST_HOST` est défini
+2. Accédez à `/api/docs` pour vérifier que le JSON est généré
+3. Vérifiez les logs pour les erreurs de génération Swagger
+
+### ❌ Problème de CORS
+**Solution** :
+- Ajoutez votre domaine frontend dans `CORS_ALLOWED_ORIGINS`
+- Format : `"https://votre-frontend.onrender.com,http://localhost:3000"`
+- Redéployez l'application
+
+### ❌ Base de données inaccessible
+**Solution** :
+- Vérifiez les credentials PostgreSQL dans les variables d'environnement
+- S'assurer que la DB Render est active (pas en hibernation)
+- Testez la connexion : les logs montreront "Waiting for database..."
+
+## 📞 Support et Debugging
+
+### Checklist de déploiement ✅
+
+- [ ] `APP_KEY` est défini dans Render
+- [ ] Toutes les variables d'environnement sont configurées
+- [ ] La base de données PostgreSQL est active
+- [ ] Le fichier `welcome.blade.php` existe
+- [ ] Les logs Render ne montrent pas d'erreurs critiques
+
+### Pour déboguer :
+
+1. **Vérifier les logs Render** (onglet Logs dans le dashboard)
+2. **Tester localement** avec Docker :
+   ```bash
+   docker build -t api-test .
+   docker run -p 8000:80 -e APP_KEY=base64:test... api-test
+   ```
+3. **Consulter la documentation Swagger** : `/api/documentation`
+4. **Tester les endpoints** avec curl ou Postman
+
+### Fichiers de référence
+
+- `RENDER_DEPLOYMENT.md` - Guide détaillé de déploiement
+- `.env.example` - Template des variables d'environnement
+- `Dockerfile` - Configuration Docker avec script de démarrage amélioré
 
 ## 🔄 Mises à jour
 
