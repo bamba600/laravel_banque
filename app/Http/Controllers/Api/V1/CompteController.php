@@ -20,7 +20,7 @@ class CompteController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/comptes",
+     *     path="/comptes",
      *     summary="Lister les comptes bancaires",
      *     description="Récupère la liste paginée des comptes non archivés avec possibilité de filtrage par type, statut et tri",
      *     operationId="listerComptes",
@@ -133,7 +133,7 @@ class CompteController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/comptes/{numero}",
+     *     path="/comptes/{numero}",
      *     summary="Détail d'un compte bancaire",
      *     description="Récupère les informations détaillées d'un compte par son numéro unique",
      *     operationId="detailCompte",
@@ -176,7 +176,7 @@ class CompteController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/comptes/client/{telephone}",
+     *     path="/comptes/client/{telephone}",
      *     summary="Comptes d'un client",
      *     description="Récupère tous les comptes d'un client via son numéro de téléphone",
      *     operationId="comptesParClient",
@@ -245,7 +245,7 @@ class CompteController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/comptes/{compteId}/bloquer",
+     *     path="/comptes/{compteId}/bloquer",
      *     summary="Bloquer un compte bancaire",
      *     description="Permet de bloquer un compte épargne avec des dates de début et fin optionnelles. Seuls les comptes épargne peuvent être bloqués.",
      *     operationId="bloquerCompte",

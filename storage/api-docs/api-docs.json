@@ -16,7 +16,7 @@
         }
     ],
     "paths": {
-        "/api/v1/comptes": {
+        "/comptes": {
             "get": {
                 "tags": [
                     "Comptes"
@@ -145,7 +145,7 @@
                 }
             }
         },
-        "/api/v1/comptes/{numero}": {
+        "/comptes/{numero}": {
             "get": {
                 "tags": [
                     "Comptes"
@@ -209,7 +209,7 @@
                 }
             }
         },
-        "/api/v1/comptes/client/{telephone}": {
+        "/comptes/client/{telephone}": {
             "get": {
                 "tags": [
                     "Comptes"
@@ -271,7 +271,7 @@
                 }
             }
         },
-        "/api/v1/comptes/{compteId}/bloquer": {
+        "/comptes/{compteId}/bloquer": {
             "post": {
                 "tags": [
                     "Comptes"
