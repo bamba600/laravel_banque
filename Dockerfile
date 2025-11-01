@@ -9,12 +9,13 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
+    libpq-dev \
     zip \
     unzip \
     git \
     curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -62,7 +63,7 @@ fi\n\
 \n\
 # Attendre que la base de données soit prête (avec timeout)\n\
 echo "Waiting for database..."\n\
-timeout=30\n\
+timeout=60\n\
 counter=0\n\
 while ! php artisan migrate:status > /dev/null 2>&1; do\n\
     if [ $counter -ge $timeout ]; then\n\
@@ -78,6 +79,7 @@ done\n\
 if php artisan migrate:status > /dev/null 2>&1; then\n\
     echo "Running migrations..."\n\
     php artisan migrate --force\n\
+    echo "Migrations completed successfully"\n\
 else\n\
     echo "Skipping migrations due to database issues"\n\
 fi\n\
