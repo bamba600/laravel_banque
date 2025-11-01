@@ -43,6 +43,25 @@ https://proget-laravel-api.onrender.com/%7BL5_SWAGGER_CONST_HOST%7D/api/v1/compt
 5. Cliquez sur "Save Changes"
 6. Render redéploiera automatiquement
 
+### 3. ❌ Duplication du Préfixe `/api/v1` dans les Routes
+**Symptôme** : Toutes les routes généraient des URLs incorretes avec duplication du préfixe.
+
+**Exemple d'erreur** :
+- Les chemins dans les annotations utilisaient `/api/v1/comptes`
+- Le serveur Swagger avait déjà `/api/v1` comme base URL
+- Résultat : duplication et routes incorrectes
+
+**Solution** :
+- ✅ Changement de tous les chemins pour utiliser des URLs relatives
+- ✅ `/api/v1/comptes` → `/comptes`
+- ✅ `/api/v1/comptes/{numero}` → `/comptes/{numero}`
+- ✅ `/api/v1/comptes/client/{telephone}` → `/comptes/client/{telephone}`
+- ✅ `/api/v1/comptes/{compteId}/bloquer` → `/comptes/{compteId}/bloquer`
+
+**Fichiers modifiés** :
+- `app/Http/Controllers/Api/V1/CompteController.php`
+- `storage/api-docs/api-docs.json`
+
 ## ✅ Résultat Attendu
 
 Après le redéploiement, vos URLs Swagger seront correctes :
@@ -55,6 +74,9 @@ https://proget-laravel-api.onrender.com/%7BL5_SWAGGER_CONST_HOST%7D/api/v1/compt
 **Après** :
 ```
 https://proget-laravel-api.onrender.com/api/v1/comptes
+https://proget-laravel-api.onrender.com/api/v1/comptes/{numero}
+https://proget-laravel-api.onrender.com/api/v1/comptes/client/{telephone}
+https://proget-laravel-api.onrender.com/api/v1/comptes/{compteId}/bloquer
 ```
 
 ## 🧪 Test
