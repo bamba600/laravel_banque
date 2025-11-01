@@ -33,7 +33,7 @@ class Handler extends ExceptionHandler
     /**
      * Convertit les exceptions en réponses JSON pour l'API
      */
-    public function render($request, Throwable $exception): JsonResponse
+    public function render($request, Throwable $exception)
     {
         // Pour les requêtes API, retourner JSON
         if ($request->is('api/*')) {

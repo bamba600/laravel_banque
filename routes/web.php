@@ -28,7 +28,7 @@ Route::get('/', function () {
 Route::get('/api/documentation', function () {
     return view('vendor.l5-swagger.index', [
         'documentation' => 'default',
-        'urlToDocs' => url('/storage/api-docs/api-docs.json'),
+        'urlToDocs' => url('/docs'),
         'operationsSorter' => null,
         'configUrl' => null,
         'validatorUrl' => null,
