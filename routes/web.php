@@ -38,6 +38,17 @@ Route::get('/api/documentation', function () {
 })->name('l5-swagger.default.api');
 
 // Route pour le fichier JSON Swagger
+Route::get('/api/docs', function () {
+    $filePath = storage_path('api-docs/api-docs.json');
+    if (!file_exists($filePath)) {
+        abort(404, 'Documentation file not found');
+    }
+    return response()->file($filePath, [
+        'Content-Type' => 'application/json',
+        'Access-Control-Allow-Origin' => '*'
+    ]);
+})->name('l5-swagger.default.docs');
+
 Route::get('/api/docs/api-docs.json', function () {
     $filePath = storage_path('api-docs/api-docs.json');
     if (!file_exists($filePath)) {
@@ -49,7 +60,7 @@ Route::get('/api/docs/api-docs.json', function () {
     ]);
 })->name('l5-swagger.default.json');
 
-Route::get('/docs/asset/{asset}', function ($asset) {
+Route::get('/api/docs/asset/{asset}', function ($asset) {
     try {
         $path = public_path('vendor/l5-swagger/' . $asset);
 
@@ -65,4 +76,4 @@ Route::get('/docs/asset/{asset}', function ($asset) {
         Log::error('Swagger asset error: ' . $e->getMessage());
         abort(500);
     }
-})->where('asset', '.*');
+})->name('l5-swagger.default.asset')->where('asset', '.*');
