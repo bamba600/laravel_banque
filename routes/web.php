@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,14 +38,19 @@ Route::get('/api/documentation', function () {
 })->name('l5-swagger.default.api');
 
 Route::get('/docs/asset/{asset}', function ($asset) {
-    $path = public_path('vendor/l5-swagger/' . $asset);
+    try {
+        $path = public_path('vendor/l5-swagger/' . $asset);
 
-    if (!file_exists($path)) {
-        abort(404);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->file($path, [
+            'Content-Type' => mime_content_type($path),
+            'Cache-Control' => 'public, max-age=31536000'
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Swagger asset error: ' . $e->getMessage());
+        abort(500);
     }
-
-    return response()->file($path, [
-        'Content-Type' => mime_content_type($path),
-        'Cache-Control' => 'public, max-age=31536000'
-    ]);
 })->where('asset', '.*');
