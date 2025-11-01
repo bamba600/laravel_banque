@@ -12,17 +12,12 @@ use Illuminate\Http\Request;
  * )
  *
  * @OA\Server(
- *     url=L5_SWAGGER_CONST_HOST,
- *     description="Serveur de production"
+ *     url="https://proget-laravel-api.onrender.com/api/v1",
+ *     description="Serveur de production Render"
  * )
  * @OA\Server(
- *     url="http://localhost:8000",
+ *     url="http://localhost:8000/api/v1",
  *     description="Serveur de développement"
- * )
- *
- * @OA\Tag(
- *     name="Comptes",
- *     description="Gestion des comptes bancaires"
  * )
  *
  * @OA\Schema(

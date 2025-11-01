@@ -7,11 +7,11 @@
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
-            "description": "Serveur de production"
+            "url": "https://proget-laravel-api.onrender.com/api/v1",
+            "description": "Serveur de production Render"
         },
         {
-            "url": "http://localhost:8000",
+            "url": "http://localhost:8000/api/v1",
             "description": "Serveur de développement"
         }
     ],
@@ -496,7 +496,7 @@
     "tags": [
         {
             "name": "Comptes",
-            "description": "Gestion des comptes bancaires"
+            "description": "Comptes"
         }
     ]
 }
