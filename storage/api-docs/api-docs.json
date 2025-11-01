@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "{L5_SWAGGER_CONST_HOST}",
+            "url": "http://my-default-host.com",
             "description": "Serveur de production"
         },
         {

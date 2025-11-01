@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
  * )
  *
  * @OA\Server(
- *     url="{L5_SWAGGER_CONST_HOST}",
+ *     url=L5_SWAGGER_CONST_HOST,
  *     description="Serveur de production"
- * ),
+ * )
  * @OA\Server(
  *     url="http://localhost:8000",
  *     description="Serveur de développement"
