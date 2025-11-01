@@ -35,8 +35,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // Pour les requêtes API, retourner JSON
-        if ($request->is('api/*')) {
+        // Pour les requêtes API et Swagger, retourner JSON
+        if ($request->is('api/*') || $request->is('docs/*')) {
             // Nos exceptions personnalisées
             if ($exception instanceof ApiException) {
                 return $exception->render();
