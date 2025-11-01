@@ -322,7 +322,7 @@ return [
          */
         'servers' => [
             [
-                'url' => env('APP_URL', 'http://localhost:8000') . '/api/v1',
+                'url' => env('APP_URL', 'https://proget-laravel-api.onrender.com') . '/api/v1',
                 'description' => 'API Server',
             ],
         ],
