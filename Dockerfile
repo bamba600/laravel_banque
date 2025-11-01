@@ -33,6 +33,9 @@ COPY . /var/www/html
 # Installer les dépendances PHP
 RUN composer install --optimize-autoloader --no-dev
 
+# Publier les vues et assets Swagger
+RUN php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider" --force
+
 # Définir les permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
