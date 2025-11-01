@@ -16,3 +16,37 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Swagger Documentation Routes
+|--------------------------------------------------------------------------
+|
+| Routes pour la documentation Swagger UI
+|
+*/
+Route::group(['prefix' => 'api'], function () {
+    Route::get('documentation', function () {
+        return view('vendor.l5-swagger.index', [
+            'documentation' => 'default',
+            'urlToDocs' => url('/storage/api-docs/api-docs.json'),
+            'operationsSorter' => null,
+            'configUrl' => null,
+            'validatorUrl' => null,
+            'useAbsolutePath' => false
+        ]);
+    })->name('l5-swagger.default.api');
+
+    Route::get('docs/{asset}', function ($asset) {
+        $path = base_path('vendor/swagger-api/swagger-ui/dist/' . $asset);
+
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->file($path, [
+            'Content-Type' => mime_content_type($path),
+            'Cache-Control' => 'public, max-age=31536000'
+        ]);
+    })->where('asset', '.*');
+});
