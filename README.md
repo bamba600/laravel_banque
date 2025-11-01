@@ -37,6 +37,21 @@ Cette API Laravel fournit une gestion complète des comptes bancaires avec authe
 - `sort`: champ de tri (`dateCreation`, `numero`, `solde`)
 - `order`: ordre (`asc`, `desc`)
 
+## 🔒 Sécurité HTTPS
+
+### Configuration des Proxies de Confiance
+
+L'application est configurée pour fonctionner derrière des reverse proxies (comme Render, AWS ELB, etc.) :
+
+- **TrustProxies Middleware** : Configuré pour faire confiance à tous les proxies (`$proxies = '*'`)
+- **Headers de Proxy** : Détecte automatiquement HTTPS via les headers `X-Forwarded-*`
+- **ASSET_URL** : Force tous les assets à être chargés via HTTPS
+
+Cette configuration résout les problèmes de :
+- ✅ Contenu mixte (mixed content)
+- ✅ Détection incorrecte du protocole HTTPS
+- ✅ URLs générées avec HTTP au lieu de HTTPS
+
 ## 🚀 Déploiement
 
 ### Prérequis

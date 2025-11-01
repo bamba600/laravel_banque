@@ -45,7 +45,10 @@ LOG_LEVEL=error
 L5_SWAGGER_GENERATE_ALWAYS=false
 L5_SWAGGER_CONST_HOST=https://proget-laravel-api.onrender.com
 L5_SWAGGER_USE_ABSOLUTE_PATH=true
+ASSET_URL=https://proget-laravel-api.onrender.com
 ```
+
+> **Note:** `ASSET_URL` force tous les assets (CSS, JS, images) à être chargés via HTTPS, résolvant ainsi les erreurs de contenu mixte (mixed content).
 
 ### CORS (optionnel)
 
