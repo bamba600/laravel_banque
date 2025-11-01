@@ -103,7 +103,7 @@
                 background: rgba(249,62,62,.25);
             }
             #dark-mode .loading-container .loading:before{
-                border-color: rgba(255,255,255,0.1);
+                border-color: rgba(255,255,255,10%);
                 border-top-color: rgba(255,255,255,.6);
             }
             #dark-mode svg:not(:root){
@@ -127,9 +127,9 @@
         const ui = SwaggerUIBundle({
             dom_id: '#swagger-ui',
             url: "{!! $urlToDocs !!}",
-            operationsSorter: {!! isset($operationsSorter) ? json_encode($operationsSorter) : 'null' !!},
-            configUrl: {!! isset($configUrl) ? json_encode($configUrl) : 'null' !!},
-            validatorUrl: {!! isset($validatorUrl) ? json_encode($validatorUrl) : 'null' !!},
+            operationsSorter: {!! isset($operationsSorter) ? '"' . $operationsSorter . '"' : 'null' !!},
+            configUrl: {!! isset($configUrl) ? '"' . $configUrl . '"' : 'null' !!},
+            validatorUrl: {!! isset($validatorUrl) ? '"' . $validatorUrl . '"' : 'null' !!},
             oauth2RedirectUrl: "{{ route('l5-swagger.'.$documentation.'.oauth2_callback', [], $useAbsolutePath) }}",
 
             requestInterceptor: function(request) {
@@ -147,10 +147,10 @@
             ],
 
             layout: "StandaloneLayout",
-            docExpansion : {!! json_encode(config('l5-swagger.defaults.ui.display.doc_expansion', 'none')) !!},
+            docExpansion : "{!! config('l5-swagger.defaults.ui.display.doc_expansion', 'none') !!}",
             deepLinking: true,
-            filter: {!! config('l5-swagger.defaults.ui.display.filter') !!},
-            persistAuthorization: {!! config('l5-swagger.defaults.ui.authorization.persist_authorization') !!},
+            filter: {!! config('l5-swagger.defaults.ui.display.filter') ? 'true' : 'false' !!},
+            persistAuthorization: "{!! config('l5-swagger.defaults.ui.authorization.persist_authorization') ? 'true' : 'false' !!}",
 
         })
 
@@ -158,7 +158,7 @@
 
         @if(in_array('oauth2', array_column(config('l5-swagger.defaults.securityDefinitions.securitySchemes'), 'type')))
         ui.initOAuth({
-            usePkceWithAuthorizationCodeGrant: {!! (bool)config('l5-swagger.defaults.ui.authorization.oauth2.use_pkce_with_authorization_code_grant') !!}
+            usePkceWithAuthorizationCodeGrant: "{!! (bool)config('l5-swagger.defaults.ui.authorization.oauth2.use_pkce_with_authorization_code_grant') !!}"
         })
         @endif
     }
