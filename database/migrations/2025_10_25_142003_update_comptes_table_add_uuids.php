@@ -7,40 +7,55 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        // Activer l'extension uuid-ossp si elle n'est pas déjà activée
-        DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+        // Supprimer la colonne id avec CASCADE pour supprimer les contraintes dépendantes
+        DB::statement('ALTER TABLE comptes DROP COLUMN id CASCADE;');
 
+        // Recréer la colonne UUID id
         Schema::table('comptes', function (Blueprint $table) {
-            // Supprimer la contrainte de clé étrangère
-            $table->dropForeign(['client_id']);
-        });
-        Schema::table('comptes', function (Blueprint $table) {
-            // Supprimer l'ancienne colonne id
-            $table->dropColumn('id');
+            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
         });
 
-        Schema::table('comptes', function (Blueprint $table) {
-            // Ajouter la nouvelle colonne uuid comme clé primaire
-            $table->uuid('id')->primary()->first();
-            // Modifier le type de client_id en uuid
-            DB::statement('ALTER TABLE comptes ALTER COLUMN client_id TYPE uuid USING (uuid_generate_v4())');
+        // Restaurer les clés étrangères
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->foreign('compte_source_id', 'transactions_compte_source_id_foreign')
+                  ->references('id')
+                  ->on('comptes')
+                  ->onDelete('restrict');
+            $table->foreign('compte_destination_id', 'transactions_compte_destination_id_foreign')
+                  ->references('id')
+                  ->on('comptes')
+                  ->onDelete('restrict');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        // Supprimer les clés étrangères
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->dropForeign('transactions_compte_source_id_foreign');
+            $table->dropForeign('transactions_compte_destination_id_foreign');
+        });
+
+        // Supprimer la colonne UUID id
+        DB::statement('ALTER TABLE comptes DROP COLUMN id CASCADE;');
+
+        // Recréer en tant que colonne id entière
         Schema::table('comptes', function (Blueprint $table) {
-            $table->dropColumn('id');
-            $table->id(); // Remettre l'ancien type de id
-            $table->bigInteger('client_id')->change();
+            $table->id();
+        });
+
+        // Restaurer les clés étrangères
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->foreign('compte_source_id', 'transactions_compte_source_id_foreign')
+                  ->references('id')
+                  ->on('comptes')
+                  ->onDelete('restrict');
+            $table->foreign('compte_destination_id', 'transactions_compte_destination_id_foreign')
+                  ->references('id')
+                  ->on('comptes')
+                  ->onDelete('restrict');
         });
     }
 };
