@@ -22,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Activer le password grant
         Passport::enablePasswordGrant();
         
         // Configuration des durées de vie des tokens (optionnel)

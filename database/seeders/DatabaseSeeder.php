@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->command->info('Création du client OAuth...');
+        $this->call(ClientSeeder::class);
+
         $this->command->info('Création des utilisateurs...');
         $this->call(UserSeeder::class);
 

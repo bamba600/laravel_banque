@@ -212,13 +212,17 @@ class CompteController extends Controller
      */
     public function getComptesByClient(string $telephone, Request $request)
     {
-        // Normaliser le numéro de téléphone pour la recherche (supprimer les espaces)
-        $normalizedTelephone = preg_replace('/\s+/', '', $telephone);
+        // Normaliser le numéro de téléphone pour correspondre au format de la base
+        $normalizedPhone = preg_replace('/[\s\-]+/', ' ', $telephone);
+        // S'assurer que le format est +221 XX XXX XX XX
+        if (!preg_match('/^\+221\s\d{2}\s\d{3}\s\d{2}\s\d{2}$/', $normalizedPhone)) {
+            // Si le format est collé, on ajoute les espaces
+            $normalizedPhone = preg_replace('/^\+221(\d{2})(\d{3})(\d{2})(\d{2})$/', '+221 $1 $2 $3 $4', $telephone);
+        }
 
         $query = Compte::with('client:id,name,prenom')
-                      ->whereHas('client', function ($clientQuery) use ($normalizedTelephone) {
-                          // Comparer avec le numéro normalisé dans la base de données
-                          $clientQuery->whereRaw("REPLACE(telephone, ' ', '') = ?", [$normalizedTelephone]);
+                      ->whereHas('client', function ($clientQuery) use ($normalizedPhone) {
+                          $clientQuery->where('telephone', $normalizedPhone);
                       });
 
         // Pagination d'abord

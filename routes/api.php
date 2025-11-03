@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\CompteController;
+use App\Http\Controllers\Api\V1\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,81 +29,89 @@ Route::prefix('v1')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | Routes d'authentification
+    |--------------------------------------------------------------------------
+    |
+    | Authentification OAuth avec Passport
+    |
+    */
+    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/refresh', [AuthController::class, 'refresh']);
+    Route::middleware('auth.api')->post('/auth/logout', [AuthController::class, 'logout']);
+
+    /*
+    |--------------------------------------------------------------------------
     | Routes des Comptes
     |--------------------------------------------------------------------------
     |
     | Gestion des comptes bancaires
-    | Middleware: api (fourni par Laravel)
+    | Middlewares appliqués:
+    | - auth.api : Vérifie l'authentification
+    | - role:admin : Vérifie si l'utilisateur est administrateur
+    | - compte.owner : Vérifie si l'utilisateur est propriétaire du compte
     |
     */
 
     /**
-     * Lister tous les comptes non archivés
+     * Lister tous les comptes non archivés (Admin seulement)
      *
      * GET /api/v1/comptes?page=1&limit=10&type=epargne&statut=actif&sort=dateCreation&order=desc
      *
-     * Paramètres de requête:
-     * - page: numéro de page (défaut: 1)
-     * - limit: nombre d'éléments par page (défaut: 10, max: 100)
-     * - type: filtre par type de compte (epargne, courant)
-     * - statut: filtre par statut (actif, bloque)
-     * - sort: champ de tri (dateCreation, numero, solde)
-     * - order: ordre de tri (asc, desc)
-     *
-     * Réponse: Liste paginée des comptes avec métadonnées
+     * Middlewares: auth.api, role:admin
      */
     Route::get('/comptes', [CompteController::class, 'index'])
+        ->middleware(['auth.api', 'role:admin'])
         ->name('api.v1.comptes.index');
+
+    /**
+     * Bloquer un compte (Admin seulement)
+     *
+     * POST /api/v1/comptes/{compteId}/bloquer
+     *
+     * Middlewares: auth.api, role:admin
+     */
+    Route::post('/comptes/{compteId}/bloquer', [CompteController::class, 'bloquer'])
+        ->middleware(['auth.api', 'role:admin'])
+        ->name('api.v1.comptes.bloquer')
+        ->where('compteId', '[a-f0-9\-]+');
 
     /**
      * Récupérer un compte par son numéro
      *
      * GET /api/v1/comptes/{numero}
      *
-     * Paramètres:
-     * - numero: numéro du compte (string)
-     *
-     * Réponse: Détails du compte ou 404 si non trouvé
+     * Middlewares: 
+     * - auth.api : Vérifie l'authentification
+     * - role:admin|compte.owner : Accès autorisé si admin OU propriétaire du compte
      */
     Route::get('/comptes/{numero}', [CompteController::class, 'show'])
-        ->name('api.v1.comptes.show')
-        ->where('numero', '[A-Z0-9]+'); // Contrainte sur le format du numéro
+        ->middleware(['auth.api', 'role:admin|client'])
+            ->name('api.v1.comptes.show')
+        ->where('numero', '[A-Z0-9]+');
 
     /**
      * Récupérer les comptes d'un client par téléphone
      *
-     * GET /api/v1/comptes/client/{telephone}?page=1&limit=10
+     * GET /api/v1/comptes/client/{telephone}
      *
-     * Paramètres:
-     * - telephone: numéro de téléphone du client
-     * - page: numéro de page (optionnel)
-     * - limit: nombre d'éléments par page (optionnel)
-     *
-     * Réponse: Liste paginée des comptes du client
+     * Middlewares: 
+     * - auth.api : Vérifie l'authentification
+     * - role:admin|compte.owner : Accès autorisé si admin OU propriétaire du compte
      */
     Route::get('/comptes/client/{telephone}', [CompteController::class, 'getComptesByClient'])
-        ->name('api.v1.comptes.client')
-        ->where('telephone', '[0-9+\-\s]+'); // Contrainte sur le format téléphone
-
-    /**
-     * Bloquer un compte
-     *
-     * POST /api/v1/comptes/{compteId}/bloquer
-     */
-    Route::post('/comptes/{compteId}/bloquer', [CompteController::class, 'bloquer'])
-        ->name('api.v1.comptes.bloquer')
-        ->where('compteId', '[a-f0-9\-]+'); // UUID constraint
-
+        ->middleware(['auth.api', 'role:admin|client'])
+            ->name('api.v1.comptes.client')
+        ->where('telephone', '[0-9+\-\s]+');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Routes d'authentification existantes
+| Routes pour les informations utilisateur
 |--------------------------------------------------------------------------
 |
-| Routes existantes conservées pour compatibilité
+| Routes pour récupérer les informations de l'utilisateur connecté
 |
 */
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth.api')->get('/user', function (Request $request) {
     return $request->user();
 });
